@@ -5,15 +5,24 @@ import axios from 'axios';
 
 export const useUserCrudStore = defineStore('crud', {
     state: () => ({
-        loading: false,
         apiUrl: import.meta.env.VITE_API_BASE_URL,
-        users: null,
+        users: [],
+        user: null,
         error: null,
-        test: 'test'
+        test: 'test',
+        modalAction: {
+            'action': "",
+            'modal_title': "",
+            'modal_button': ""
+        }
     }),
     actions: {
+        setMessage(newMessage, user) {
+            console.log(newMessage)
+            this.modalAction.action = newMessage
+            this.user = user
+        },
         async getUsers() {
-            this.loading = true;
             try {
                 const res = await axios.get(`${this.apiUrl}/api/v1/users/`);
                 const usersDataList = res.data.data.list
@@ -25,17 +34,17 @@ export const useUserCrudStore = defineStore('crud', {
             }
         },
         async addUsers(users) {
-            this.loading = true;
             try {
-                await axios.post(`${this.apiUrl}/api/v1/users/`, users, {
+                await axios.post(`${this.apiUrl}/api/v1/users/add`, users, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     }
                 });
+                this.getUsers();
             } catch (error) {
                 console.log(error)
             } finally {
-                this.loading = false
+                this.getUsers();
             }
         },
         async deleteUser(id) {
@@ -45,20 +54,21 @@ export const useUserCrudStore = defineStore('crud', {
             } catch (error) {
                 console.log(error)
             } finally {
-                this.loading = false
+                this.getUsers();
             }
         },
-        // async updatePosts(id, posts) {
-        //     this.loading = true;
-        //     try {
-        //         await axios.put(`${this.apiUrl}/posts/${id}`, posts);
-        //         this.getPosts();
-        //     } catch (error) {
-        //         console.log(error)
-        //     } finally {
-        //         this.loading = false
-        //     }
-        // }
+        async updateUser(users) {
+            try {
+                await axios.post(`${this.apiUrl}/api/v1/users/`, users, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                });
+                this.getUsers();
+            } catch (error) {
+                console.log(error)
+            }
+        }
     },
 
 

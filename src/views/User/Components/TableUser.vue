@@ -1,14 +1,31 @@
 <template>
-
     <div>
-        <vue-good-table :columns="columns" :rows="rows" :pagination-options="{
-            enabled: true, perPage: 5
-        }">
+        <vue-good-table :search-options="{ enabled: true }" :columns="columns" :rows="rows"
+            :pagination-options="{ enabled: true, perPage: 50 }" :line-numbers="true">
             <template v-slot:table-row="{ column, row }">
+                <span v-if="column.field == 'photo_url'" class="flex align-center justify-center">
+                    <span v-if="row.photo_url">
+                        <img :src="formatPhoto(row.photo_url)" style="width: 50px; height: 50px;" />
+                    </span>
+                    <span v-else>
+                        No Image
+                    </span>
+                </span>
+                <span v-if="column.field == 'name'">
+                    <span v-if="row.name">
+                        {{ row.name }}
+                        <Badge v-if="row.photo_url == null" label="No Image" badgeClass="bg-primary-500 text-white" />
+                        <Badge v-if="row.name != 'Admin'" label="user" badgeClass="bg-success-500 text-white" />
+                        <Badge v-if="row.name == 'Admin'" label="Admin" badgeClass="bg-red-900 text-white" />
+                    </span>
+                </span>
                 <span v-if="column.field === 'actions'">
                     <button @click="editUser(row)" class="btn btn-primary btn-sm mr-2">Edit</button>
                     <button @click="deleteuser(row)" class="btn btn-danger btn-sm">Delete</button>
                 </span>
+            </template>
+            <template #table-actions>
+                <AddUser  />
             </template>
         </vue-good-table>
     </div>
@@ -17,12 +34,25 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useUserCrudStore } from '@/views/User/Stores/user'
+import Badge from '@/components/Badge';
+import Modal from "@/components/Modal";
+import AddUser from '@/views/User/Components/AddUser.vue'
+
 
 export default {
+    components: {
+        Badge,
+        Modal,
+        AddUser
+    },
     setup() {
         const crudStore = useUserCrudStore()
         const columns = [
-
+            {
+                label: 'Photo',
+                field: 'photo_url',
+                thClass: 'text-center',
+            },
             {
                 label: 'Name',
                 field: 'name',
@@ -41,25 +71,30 @@ export default {
                 thClass: 'text-center',
             }
         ]
-        const rows = ref([
-        ])
+        const rows = ref([]);
+        const show = ref(false);
+        const apiUrl = ref(import.meta.env.VITE_API_BASE_URL)
 
+        const toggleModal = () => {
+            show.value = !show.value;
+        };
+        const editUser = (row) => {
+            crudStore.setMessage('edit', row)
+        }
         const getUsers = async () => {
             await crudStore.getUsers()
             if (crudStore.users) {
-
                 rows.value = crudStore.users || []
-                rows.value.forEach((row) => {
-                    row.actions = '<button class="btn btn-primary btn-sm" >Edit</button> <button @click="deleteUser(row)" class="btn btn-danger btn-sm">Delete</button>'
-                })
-
             } else {
-                console.warn('Users data is not available')
                 rows.value = []
             }
         }
-        const deleteuser = (row) => {
-            crudStore.deleteUser(row.id)
+        const deleteuser = async (row) => {
+            await crudStore.deleteUser(row.id)
+            await getUsers()
+        }
+        const formatPhoto = (photoUrl) => {
+            return photoUrl ? `${apiUrl.value}${photoUrl.substring(16)}` : '';
         }
 
         onMounted(async () => {
@@ -68,7 +103,12 @@ export default {
         return {
             columns,
             rows,
-            deleteuser
+            deleteuser,
+            editUser,
+            show,
+            toggleModal,
+            formatPhoto,
+            apiUrl,
         }
     },
 }
