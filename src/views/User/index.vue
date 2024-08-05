@@ -1,25 +1,11 @@
 <template>
     <div>
-        <!-- <div class="flex justify-end mb-4">
-            <ModalAdd  />
-        </div> -->
         <div>
-            <Table />
+            <TableUser />
         </div>
-
     </div>
 </template>
 
-<script>
-import Table from '@/views/User/Components/TableUser.vue'
-export default {
-    components: {
-        Table,
-    },
-    data() {
-        return {
-            
-        }
-    }
-}
+<script setup>
+import TableUser from '@/views/User/Components/TableUser.vue'
 </script>

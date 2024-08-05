@@ -8,17 +8,20 @@ export const useUserCrudStore = defineStore('crud', {
         apiUrl: import.meta.env.VITE_API_BASE_URL,
         users: [],
         user: null,
-        error: null,
+        error: {
+            status: null,
+            message: null,
+        },
         test: 'test',
         modalAction: {
             'action': "",
             'modal_title': "",
             'modal_button': ""
-        }
+        },
+        refreshTable: null
     }),
     actions: {
         setMessage(newMessage, user) {
-            console.log(newMessage)
             this.modalAction.action = newMessage
             this.user = user
         },
@@ -27,8 +30,13 @@ export const useUserCrudStore = defineStore('crud', {
                 const res = await axios.get(`${this.apiUrl}/api/v1/users/`);
                 const usersDataList = res.data.data.list
                 this.users = usersDataList
+
             } catch (error) {
                 console.error('Failed to fetch users:', error)
+                this.error = {
+                    status: error.response ?.status,
+                    message: 'Failed to fetch users: ' + error.message,
+                };
             } finally {
                 this.loading = false
             }
@@ -41,8 +49,15 @@ export const useUserCrudStore = defineStore('crud', {
                     }
                 });
                 this.getUsers();
+                this.error = {
+                    status: '200',
+                };
             } catch (error) {
                 console.log(error)
+                this.error = {
+                    status: error.response ?.status,
+                    message: 'Failed to fetch users: ' + error.message,
+                };
             } finally {
                 this.getUsers();
             }
@@ -51,8 +66,15 @@ export const useUserCrudStore = defineStore('crud', {
             this.loading = true;
             try {
                 await axios.delete(`${this.apiUrl}/api/v1/users/${id}`);
+                this.error = {
+                    status: '200',
+                };
             } catch (error) {
                 console.log(error)
+                this.error = {
+                    status: error.response ?.status,
+                    message: 'Failed to fetch users: ' + error.message,
+                };
             } finally {
                 this.getUsers();
             }
@@ -64,9 +86,15 @@ export const useUserCrudStore = defineStore('crud', {
                         'Content-Type': 'multipart/form-data',
                     }
                 });
-                this.getUsers();
+                this.error = {
+                    status: '200',
+                };
             } catch (error) {
-                console.log(error)
+                this.error = {
+                    status: error.status,
+                    message: 'Failed to fetch users: ' + error.message,
+                };
+                console.log(this.error)
             }
         }
     },

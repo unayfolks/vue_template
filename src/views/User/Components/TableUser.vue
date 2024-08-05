@@ -20,96 +20,83 @@
                     </span>
                 </span>
                 <span v-if="column.field === 'actions'">
-                    <button @click="editUser(row)" class="btn btn-primary btn-sm mr-2">Edit</button>
-                    <button @click="deleteuser(row)" class="btn btn-danger btn-sm">Delete</button>
+                    <Button @click="deleteuser(row)" btnClass="btn-danger btn-sm" icon="heroicons-outline:trash"/>
+                    <Button @click="editUser(row)"  btnClass="btn-primary btn-sm" icon="heroicons-outline:pencil"/>
                 </span>
             </template>
             <template #table-actions>
-                <AddUser  />
+                <AddUser @response="refreshTable" />
             </template>
         </vue-good-table>
+        <TableSkeltion  v-if="isSkeletion2" />
     </div>
 </template>
 
-<script>
-import { ref, onMounted } from 'vue'
-import { useUserCrudStore } from '@/views/User/Stores/user'
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useUserCrudStore } from '@/views/User/Stores/user';
 import Badge from '@/components/Badge';
-import Modal from "@/components/Modal";
-import AddUser from '@/views/User/Components/AddUser.vue'
+import AddUser from '@/views/User/Components/AddUser.vue';
+import Swal from 'sweetalert2';
+import { useToast } from "vue-toastification";
+import {column} from '../Constant/column'
+import TableSkeltion from "@/components/Skeleton/Table";
+import Button from "@/components/Button";
 
 
-export default {
-    components: {
-        Badge,
-        Modal,
-        AddUser
-    },
-    setup() {
-        const crudStore = useUserCrudStore()
-        const columns = [
-            {
-                label: 'Photo',
-                field: 'photo_url',
-                thClass: 'text-center',
-            },
-            {
-                label: 'Name',
-                field: 'name',
-                thClass: 'text-center',
-            },
-            {
-                label: 'Email',
-                field: 'email',
-                type: 'email',
-                thClass: 'text-center',
-            },
-            {
-                label: 'Actions',
-                field: 'actions',
-                tdClass: 'text-center',
-                thClass: 'text-center',
-            }
-        ]
-        const rows = ref([]);
-        const show = ref(false);
-        const apiUrl = ref(import.meta.env.VITE_API_BASE_URL)
-
-        const toggleModal = () => {
-            show.value = !show.value;
-        };
-        const editUser = (row) => {
-            crudStore.setMessage('edit', row)
-        }
-        const getUsers = async () => {
-            await crudStore.getUsers()
-            if (crudStore.users) {
-                rows.value = crudStore.users || []
-            } else {
-                rows.value = []
-            }
-        }
-        const deleteuser = async (row) => {
-            await crudStore.deleteUser(row.id)
-            await getUsers()
-        }
-        const formatPhoto = (photoUrl) => {
-            return photoUrl ? `${apiUrl.value}${photoUrl.substring(16)}` : '';
-        }
-
-        onMounted(async () => {
-            await getUsers()
-        })
-        return {
-            columns,
-            rows,
-            deleteuser,
-            editUser,
-            show,
-            toggleModal,
-            formatPhoto,
-            apiUrl,
-        }
-    },
+const toast = useToast();
+const crudStore = useUserCrudStore()
+const isSkeletion2 = ref(null);
+const columns = ref(column)
+const rows = ref([]);
+const apiUrl = ref(import.meta.env.VITE_API_BASE_URL)
+const editUser = (row) => {
+    crudStore.setMessage('edit', row)
 }
+const getUsers = async () => {
+    isSkeletion2.value = true;
+    await crudStore.getUsers()
+    if (crudStore.users) {
+        isSkeletion2.value = false;
+        rows.value = crudStore.users || []
+    } else {
+        rows.value = []
+    }
+}
+const deleteuser = async (row) => {
+    Swal.fire({
+        title: "Apakah data ini ingin dihapus?",
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Ya",
+        denyButtonText: `Jangan`
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                await crudStore.deleteUser(row.id)
+                await getUsers()
+                toast.success("Data berhasil dihapus", {
+                    pauseOnHover: true,
+                    timeout: 2000,
+                });
+            } catch (error) {
+                toast.error(" Data gagal dihapus ", {
+                    pauseOnHover: false,
+                    timeout: 2000,
+                });
+            }
+        } else if (result.isDenied) {
+            Swal.fire("Changes are not saved", "", "info");
+        }
+    });
+}
+const refreshTable = async () => {
+    await getUsers()
+}
+const formatPhoto = (photoUrl) => {
+    return photoUrl ? `${apiUrl.value}${photoUrl.substring(16)}` : '';
+}
+onMounted(async () => {
+    await getUsers()
+})
 </script>
