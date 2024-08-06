@@ -20,45 +20,46 @@
                     </span>
                 </span>
                 <span v-if="column.field === 'actions'">
-                    <Button @click="deleteuser(row)" btnClass="btn-danger btn-sm" icon="heroicons-outline:trash"/>
-                    <Button @click="editUser(row)"  btnClass="btn-primary btn-sm" icon="heroicons-outline:pencil"/>
+                    <Button @click="deleteuser(row)" btnClass="btn-danger btn-sm" icon="heroicons-outline:trash" />
+                    <Button @click="editUser(row)" btnClass="btn-primary btn-sm" icon="heroicons-outline:pencil" />
                 </span>
             </template>
             <template #table-actions>
                 <AddUser @response="refreshTable" />
             </template>
         </vue-good-table>
-        <TableSkeltion  v-if="isSkeletion2" />
+        <TableSkeleton v-if="isSkeleton" />
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useUserCrudStore } from '@/views/User/Stores/user';
 import Badge from '@/components/Badge';
-import AddUser from '@/views/User/Components/AddUser.vue';
+import AddUser from '@/views/User/components/FormUser.vue';
 import Swal from 'sweetalert2';
-import { useToast } from "vue-toastification";
-import {column} from '../Constant/column'
-import TableSkeltion from "@/components/Skeleton/Table";
+import TableSkeleton from "@/components/Skeleton/Table";
 import Button from "@/components/Button";
 
+import { ref, onMounted } from 'vue';
+import { useUserStore } from '@/views/User/stores/user';
+import { useToast } from "vue-toastification";
+import { column } from '../constant/column';
 
 const toast = useToast();
-const crudStore = useUserCrudStore()
-const isSkeletion2 = ref(null);
+const userStore = useUserStore()
+const isSkeleton = ref(null);
 const columns = ref(column)
 const rows = ref([]);
 const apiUrl = ref(import.meta.env.VITE_API_BASE_URL)
+
 const editUser = (row) => {
-    crudStore.setMessage('edit', row)
+    userStore.openForm('edit', row)
 }
 const getUsers = async () => {
-    isSkeletion2.value = true;
-    await crudStore.getUsers()
-    if (crudStore.users) {
-        isSkeletion2.value = false;
-        rows.value = crudStore.users || []
+    isSkeleton.value = true;
+    await userStore.getUsers()
+    if (userStore.users) {
+        isSkeleton.value = false;
+        rows.value = userStore.users || []
     } else {
         rows.value = []
     }
@@ -73,7 +74,7 @@ const deleteuser = async (row) => {
     }).then(async (result) => {
         if (result.isConfirmed) {
             try {
-                await crudStore.deleteUser(row.id)
+                await userStore.deleteUser(row.id)
                 await getUsers()
                 toast.success("Data berhasil dihapus", {
                     pauseOnHover: true,

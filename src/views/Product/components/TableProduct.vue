@@ -36,8 +36,8 @@
 </template>
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useProductStore } from '../Stores/product';
-import { column, selectAvailable } from '../Constant/column';
+import { useProductStore } from '../stores/product';
+import { column, selectAvailable } from '../constant/column';
 import TableSkeltion from "@/components/Skeleton/Table";
 import Select from "@/components/Select";
 import InputGroup from "@/components/InputGroup";
