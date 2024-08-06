@@ -20,7 +20,7 @@
                     </span>
                 </span>
                 <span v-if="column.field === 'actions'">
-                    <Button @click="deleteuser(row)" btnClass="btn-danger btn-sm" icon="heroicons-outline:trash" />
+                    <Button @click="deleteUser(row)" btnClass="btn-danger btn-sm" icon="heroicons-outline:trash" />
                     <Button @click="editUser(row)" btnClass="btn-primary btn-sm" icon="heroicons-outline:pencil" />
                 </span>
             </template>
@@ -64,7 +64,7 @@ const getUsers = async () => {
         rows.value = []
     }
 }
-const deleteuser = async (row) => {
+const deleteUser = async (row) => {
     Swal.fire({
         title: "Apakah data ini ingin dihapus?",
         showDenyButton: true,

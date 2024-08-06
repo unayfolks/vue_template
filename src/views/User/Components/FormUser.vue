@@ -41,8 +41,8 @@ const user = reactive({
     photo: '',
     file: null,
 })
-const modal_title = ref('')
-const modal_button = ref('')
+const modal_title = ref('');
+const modal_button = ref('');
 const previewImage = ref('');
 const apiUrl = ref(import.meta.env.VITE_API_BASE_URL)
 const isAddMode = computed(() => action.value === 'add')
@@ -64,6 +64,7 @@ watch(action, (newAction) => {
             file: null,
         });
         previewImage.value = userStore.user.photo_url ? `${apiUrl.value}${userStore.user.photo_url.substring(16)}` : '';
+        console.log(previewImage.value)
     } else if (newAction === 'add') {
         show.value = true
         modal_title.value = 'Add new user';
@@ -115,7 +116,6 @@ const addUpdateUser = async () => {
     //     console.log(key, value);
     // });
     try {
-
         if (user.id) {
             await userStore.updateUser(formData);
             console.log(statusMessage.value)
@@ -136,7 +136,6 @@ const addUpdateUser = async () => {
 
         } else {
             await userStore.addUsers(formData);
-            console.log(statusMessage.value)
             
             if (statusMessage.value != 200) {
                 toast.error(" Errorr ", {

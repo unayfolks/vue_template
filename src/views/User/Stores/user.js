@@ -3,7 +3,7 @@ import {
 } from "pinia";
 import axios from 'axios';
 
-export const useUserStore = defineStore('crud', {
+export const useUserStore = defineStore('user', {
     state: () => ({
         apiUrl: import.meta.env.VITE_API_BASE_URL,
         users: [],
@@ -17,7 +17,6 @@ export const useUserStore = defineStore('crud', {
             'modal_title': "",
             'modal_button': ""
         },
-        refreshTable: null
     }),
     actions: {
         openForm(newAction, user) {
@@ -42,14 +41,15 @@ export const useUserStore = defineStore('crud', {
         },
         async addUsers(users) {
             try {
-                await axios.post(`${this.apiUrl}/api/v1/users/add`, users, {
+                const res = await axios.post(`${this.apiUrl}/api/v1/users/add`, users, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     }
                 });
                 this.getUsers();
                 this.error = {
-                    status: '200',
+                    status: res.status,
+                    message: res.data.message
                 };
             } catch (error) {
                 console.log(error)

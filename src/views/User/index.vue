@@ -7,5 +7,5 @@
 </template>
 
 <script setup>
-import TableUser from '@/views/User/Components/TableUser.vue'
+import TableUser from '@/views/User/components/TableUser.vue'
 </script>

@@ -1,8 +1,8 @@
 <template>
     <div>
-        <TableProduct/>
+        <router-view />
     </div>
 </template>
 <script setup>
-import TableProduct from './components/TableProduct.vue';
+import { RouterLink, RouterView } from 'vue-router'
 </script>
