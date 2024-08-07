@@ -35,7 +35,7 @@ export const useCustomerStore = defineStore('customer', {
         },
         async addCustomer(customer) {
             try {
-                const res = await axios.post(`${this.apiUrl}/api/v1/customers/add`, customer, {
+                const res = await axios.post(`${this.apiUrl}/api/v1/customers`, customer, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     }
@@ -68,7 +68,7 @@ export const useCustomerStore = defineStore('customer', {
             // });
             
             try{
-                const res = await axios.post(`${this.apiUrl}/api/v1/customers`, customer, {
+                const res = await axios.put(`${this.apiUrl}/api/v1/customers`, customer, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     }

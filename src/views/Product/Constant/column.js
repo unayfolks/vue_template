@@ -47,3 +47,41 @@ export const selectAvailable = [{
         label: "Option 3",
     },
 ]
+export const detailHeader = [{
+        label: "Action",
+        field: "action"
+    },
+    {
+        label: "Description",
+        field: "description"
+    },
+    {
+        label: "Type",
+        field: "type"
+    },
+    {
+        label: "Price",
+        field: "price"
+    }
+]
+export const detailHeaderAdd = [{
+    label: "Action",
+    field: "action",
+    // hidden: true,
+},
+{
+    label: "Description",
+    field: "description",
+    // hidden: true,
+},
+{
+    label: "Type",
+    field: "type",
+    // hidden: true,
+},
+{
+    label: "Price",
+    field: "price",
+    // hidden: true,
+}
+]

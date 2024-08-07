@@ -45,7 +45,7 @@ import { useToast } from "vue-toastification";
 import { column } from '../constant/column';
 
 const toast = useToast();
-const userStore = useUserStore()
+const userStore = useUserStore();
 const isSkeleton = ref(null);
 const columns = ref(column)
 const rows = ref([]);

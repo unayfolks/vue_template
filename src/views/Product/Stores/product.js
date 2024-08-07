@@ -16,7 +16,8 @@ export const useProductStore = defineStore('product', {
             'action': "",
             'modal_title': "",
             'modal_button': ""
-        }
+        },
+        detail:[]
 
     }),
     actions: {
@@ -43,6 +44,9 @@ export const useProductStore = defineStore('product', {
             } catch (error) {
                 
             }
-        }
+        },
+        async addDetail(detail){
+            console.log(detail)
+        }   
     }
 })
