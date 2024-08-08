@@ -45,8 +45,25 @@ export const useProductStore = defineStore('product', {
                 
             }
         },
-        async addDetail(detail){
-            console.log(detail)
-        }   
+        async addProduct(product){
+            console.log(product)
+            try {
+                // const res = await axios.post(`${this.apiUrl}/api/v1/products`, product, {
+                //     headers: {
+                //         'Content-Type': 'multipart/form-data',
+                //     }
+                // });
+                // this.error = {
+                //     status : res.status,
+                //     message : res.data.message
+                // }
+                // console.log(res)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async updateProduct(product){
+            console.log(product)
+        }
     }
 })

@@ -37,19 +37,12 @@ import Button from "@/components/Button";
 import Textinput from "@/components/Textinput";
 import { useToast } from "vue-toastification";
 import Swal from 'sweetalert2';
+import { column } from '../constant/column';
 
 const toast = useToast()
 const categoryStore = useCategoryStore()
-const columns = [
-    {
-        label: 'Name',
-        field: 'name'
-    },
-    {
-        label: 'Action',
-        field: 'actions'
-    }
-]
+const columns = ref(column)
+
 const rows = ref([]);
 const show = ref(false);
 const modal_title = ref('');

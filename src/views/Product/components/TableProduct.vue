@@ -35,7 +35,7 @@
                 </span>
             </template>
         </vue-good-table>
-        <TableSkeltion v-if="isSkeletion2" />
+        <TableSkeleton v-if="isSkeleton" />
     </div>
 </template>
 <script setup>
@@ -43,7 +43,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import { onMounted, ref, computed } from 'vue';
 import { useProductStore } from '../stores/product';
 import { column, selectAvailable } from '../constant/column';
-import TableSkeltion from "@/components/Skeleton/Table";
+import TableSkeleton from "@/components/Skeleton/Table";
 import Select from "@/components/Select";
 import InputGroup from "@/components/InputGroup";
 import Button from "@/components/Button";
@@ -51,7 +51,7 @@ import Swal from 'sweetalert2'
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
-const isSkeletion2 = ref(null);
+const isSkeleton = ref(null);
 const rows = ref([]);
 const searchTerm = ref()
 const selected = ref()
@@ -62,10 +62,10 @@ const apiUrl = ref(import.meta.env.VITE_API_BASE_URL)
 const errorMessage = computed(() => productStore.error.message) //message error
 
 const getProduct = async () => {
-    isSkeletion2.value = true;
+    isSkeleton.value = true;
     await productStore.getProducts();
     if (productStore.products) {
-        isSkeletion2.value = false;
+        isSkeleton.value = false;
         rows.value = productStore.products || []
     } else {
         rows.value = []

@@ -26,11 +26,11 @@
 
 <script>
 import { useDropzone } from "vue3-dropzone";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 export default {
   name: "UseDropzoneDemo",
-  setup() {
+  setup(_, { emit }) {
     const files = ref([]);
     function onDrop(acceptFiles) {
       files.value = acceptFiles.map((file) =>
@@ -39,7 +39,11 @@ export default {
         })
       );
     }
-
+    // Watch for changes in files and emit the new files to parent
+    watch(files, (newFiles) => {
+      emit("files-changed", newFiles);
+      console.log(newFiles)
+    });
     const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop });
 
     return {
