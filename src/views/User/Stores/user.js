@@ -17,6 +17,10 @@ export const useUserStore = defineStore('user', {
             'modal_title': "",
             'modal_button': ""
         },
+        totalData: 0,
+        current: 1,
+        perpage: 5,
+        searchQuery: '',
     }),
     actions: {
         openForm(newAction, user) {
@@ -25,12 +29,14 @@ export const useUserStore = defineStore('user', {
         },
         async getUsers() {
             try {
-                const res = await axios.get(`${this.apiUrl}/api/v1/users/`);
+                const url = `${this.apiUrl}/api/v1/users?page=${this.current}&perPage=${this.perpage}&name=${this.searchQuery}`;
+                const res = await axios.get(url);
+
                 const usersDataList = res.data.data.list
                 this.users = usersDataList
+                this.totalData = res.data.data.meta.total
 
             } catch (error) {
-                console.error('Failed to fetch users:', error)
                 this.error = {
                     status: error.response ?.status,
                     message: 'Failed to fetch users: ' + error.message,
@@ -39,6 +45,34 @@ export const useUserStore = defineStore('user', {
                 this.loading = false
             }
         },
+        async changePage(newPage) {
+            this.current = newPage;
+            console.log(newPage)
+            await this.getUsers(); 
+        },
+        async searchUsers(query) {
+            this.searchQuery = query;
+            this.current = 1; 
+            await this.getUsers(); 
+            console.log(query)
+        },
+        // async getUsers() {
+        //     try {
+        //         const res = await axios.get(`${this.apiUrl}/api/v1/users/`);
+        //         const usersDataList = res.data.data.list
+        //         console.log(res)
+        //         this.users = usersDataList
+
+        //     } catch (error) {
+        //         console.error('Failed to fetch users:', error)
+        //         this.error = {
+        //             status: error.response ?.status,
+        //             message: 'Failed to fetch users: ' + error.message,
+        //         };
+        //     } finally {
+        //         this.loading = false
+        //     }
+        // },
         async addUsers(users) {
             try {
                 const res = await axios.post(`${this.apiUrl}/api/v1/users/add`, users, {
@@ -46,7 +80,6 @@ export const useUserStore = defineStore('user', {
                         'Content-Type': 'multipart/form-data',
                     }
                 });
-                this.getUsers();
                 this.error = {
                     status: res.status,
                     message: res.data.message

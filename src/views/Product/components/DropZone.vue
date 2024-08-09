@@ -33,17 +33,30 @@ export default {
   setup(_, { emit }) {
     const files = ref([]);
     function onDrop(acceptFiles) {
-      files.value = acceptFiles.map((file) =>
+      const filePromises = acceptFiles.map(file => convertToBase64(file).then(base64 =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
+          base64
         })
-      );
+      ));
+
+      Promise.all(filePromises).then(filesWithBase64 => {
+        files.value = filesWithBase64;
+        emit("files-changed", files.value);
+      });
     }
-    // Watch for changes in files and emit the new files to parent
-    watch(files, (newFiles) => {
-      emit("files-changed", newFiles);
-      console.log(newFiles)
-    });
+    function convertToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          resolve(reader.result);
+        };
+        reader.onerror = () => {
+          reject(new Error("Failed to convert file to base64"));
+        };
+        reader.readAsDataURL(file);
+      });
+    }
     const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop });
 
     return {

@@ -118,9 +118,7 @@ const addUpdateUser = async () => {
     try {
         if (user.id) {
             await userStore.updateUser(formData);
-            console.log(statusMessage.value)
             userStore.openForm(null) //reset form action
-
             if (statusMessage.value != 200) {
                 toast.error(" Errorr ", {
                     pauseOnHover: false,

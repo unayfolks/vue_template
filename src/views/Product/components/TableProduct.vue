@@ -9,11 +9,11 @@
             <div class="flex align-center  justify-center gap-2">
                 <InputGroup type="text" v-model="searchTerm" prependIcon="heroicons-outline:search" />
                 <Select class="w-60" :options="Available" placeholder="available" v-model="selected" />
-                <!-- <a href="/product/add">Add Product</a> -->
-                <button class="btn btn-primary btn-sm">
-                    <router-link to="product-add">Add Product
-                    </router-link>
-
+                <!-- <button class="btn btn-primary btn-sm" >
+                    <router-link to="product-form">Add Product</router-link>
+                </button> -->
+                <button class="btn btn-primary btn-sm" @click="addProduct">
+                    Add Product
                 </button>
             </div>
         </div>
@@ -31,7 +31,6 @@
                 <span v-if="column.field === 'actions'">
                     <Button @click="deleteProduct(row)" btnClass="btn-danger btn-sm" icon="heroicons-outline:trash" />
                     <Button @click="editProduct(row)" btnClass="btn-primary btn-sm" icon="heroicons-outline:pencil" />
-
                 </span>
             </template>
         </vue-good-table>
@@ -39,27 +38,29 @@
     </div>
 </template>
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { onMounted, ref, computed } from 'vue';
 import { useProductStore } from '../stores/product';
 import { column, selectAvailable } from '../constant/column';
+import { useToast } from "vue-toastification";
 import TableSkeleton from "@/components/Skeleton/Table";
 import Select from "@/components/Select";
 import InputGroup from "@/components/InputGroup";
 import Button from "@/components/Button";
 import Swal from 'sweetalert2'
-import { useToast } from "vue-toastification";
 
+const router = useRouter();
 const toast = useToast();
+const productStore = useProductStore();
 const isSkeleton = ref(null);
 const rows = ref([]);
 const searchTerm = ref()
 const selected = ref()
 const columns = ref(column)
 const Available = ref(selectAvailable)
-const productStore = useProductStore();
 const apiUrl = ref(import.meta.env.VITE_API_BASE_URL)
 const errorMessage = computed(() => productStore.error.message) //message error
+
 
 const getProduct = async () => {
     isSkeleton.value = true;
@@ -71,8 +72,15 @@ const getProduct = async () => {
         rows.value = []
     }
 }
+const addProduct = () => {
+    productStore.openForm('add')
+    router.push({ name: 'product-form', params: { product: '' } });
+}
+const editProduct = (row) => {
+    productStore.openForm('edit')
+    router.push({ name: 'product-form', params: { product: JSON.stringify(row) } });
+}
 const deleteProduct = async (row) => {
-
     Swal.fire({
         title: "Apakah data ini ingin dihapus?",
         showDenyButton: true,

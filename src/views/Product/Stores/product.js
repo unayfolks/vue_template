@@ -12,18 +12,15 @@ export const useProductStore = defineStore('product', {
             status: null,
             message: null
         },
-        modalAction: {
+        formAction: {
             'action': "",
-            'modal_title': "",
-            'modal_button': ""
+            'form_title':"",
+            'form_button':""
         },
-        detail:[]
-
     }),
     actions: {
-        openForm(newAction, product){
-            this.modalAction.action = newAction
-            this.product = product
+        openForm(newAction){
+            this.formAction.action = newAction
         },  
         async getProducts() {
             try {
@@ -46,24 +43,37 @@ export const useProductStore = defineStore('product', {
             }
         },
         async addProduct(product){
-            console.log(product)
             try {
-                // const res = await axios.post(`${this.apiUrl}/api/v1/products`, product, {
-                //     headers: {
-                //         'Content-Type': 'multipart/form-data',
-                //     }
-                // });
-                // this.error = {
-                //     status : res.status,
-                //     message : res.data.message
-                // }
-                // console.log(res)
+                const res = await axios.post(`${this.apiUrl}/api/v1/products`, product, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                });
+                this.error = {
+                    status : res.status,
+                    message : res.data.message
+                }
+                console.log(res)
             } catch (error) {
                 console.log(error)
             }
         },
         async updateProduct(product){
             console.log(product)
+            try {
+                const res = await axios.put(`${this.apiUrl}/api/v1/products`, product, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                });
+                this.error = {
+                    status : res.status,
+                    message : res.data.message
+                }
+                console.log(res)
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
 })
