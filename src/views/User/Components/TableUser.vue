@@ -12,29 +12,40 @@
         <TableSkeleton v-if="isSkeleton" />
         <vue-good-table v-if="!isSkeleton" :columns="columns" :rows="rows" styleClass=" vgt-table"
             :pagination-options="{ enabled: true }">
-            <template v-slot:table-row="{ column, row }">
-                <span v-if="column.field == 'photo_url'" class="flex align-center justify-center">
-                    <span v-if="row.photo_url">
-                        <img :src="formatPhoto(row.photo_url)" style="width: 50px; height: 50px;" />
+            <template v-slot:table-row="props">
+                <span v-if="props.column.field == 'photo_url'" class="flex align-center justify-center">
+                    <span v-if="props.row.photo_url">
+                        <img :src="formatPhoto(props.row.photo_url)" style="width: 50px; height: 50px" />
                     </span>
-                    <span v-else>
-                        No Image
-                    </span>
+                    <span v-else> No Image </span>
                 </span>
-                <span v-if="column.field == 'email'">
-                    {{ row.email }}
-                </span>
-                <span v-if="column.field == 'name'">
-                    <span v-if="row.name">
-                        {{ row.name }}
-                        <Badge v-if="row.photo_url == null" label="No Image" badgeClass="bg-primary-500 text-white" />
-                        <Badge v-if="row.name != 'Admin'" label="user" badgeClass="bg-success-500 text-white" />
-                        <Badge v-if="row.name == 'Admin'" label="Admin" badgeClass="bg-red-900 text-white" />
+                <span v-if="props.column.field == 'name'">
+                    <span v-if="props.row.name">
+                        {{ props.row.name }}
                     </span>
                 </span>
-                <span v-if="column.field === 'actions'">
-                    <Button @click="deleteUser(row)" btnClass="btn-danger btn-sm" icon="heroicons-outline:trash" />
-                    <Button @click="editUser(row)" btnClass="btn-primary btn-sm" icon="heroicons-outline:pencil" />
+
+                <span v-if="props.column.field === 'actions'">
+                    <div class="flex justify-center">
+                        <div class="flex space-x-3 rtl:space-x-reverse">
+                            <Tooltip placement="top" arrow theme="danger-500">
+                                <template #button>
+                                    <div class="action-btn" @click="editUser(props.row)">
+                                        <Icon icon="heroicons:trash" />
+                                    </div>
+                                </template>
+                                <span>Delete</span>
+                            </Tooltip>
+                            <Tooltip placement="top" arrow theme="dark">
+                                <template #button>
+                                    <div class="action-btn" @click="deleteUser(props.row)">
+                                        <Icon icon="heroicons:pencil-square" />
+                                    </div>
+                                </template>
+                                <span> Edit</span>
+                            </Tooltip>
+                        </div>
+                    </div>
                 </span>
             </template>
 
@@ -50,15 +61,14 @@
 </template>
 
 <script setup>
-import Badge from '@/components/Badge';
 import AddUser from '@/views/User/components/FormUser.vue';
 import Swal from 'sweetalert2';
 import TableSkeleton from "@/components/Skeleton/Table";
-import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Pagination from "@/components/Pagination";
 import InputGroup from "@/components/InputGroup";
-
+import Tooltip from "@/components/Tooltip";
+import Icon from "@/components/Icon";
 import { ref, onMounted, watch } from 'vue';
 import { useUserStore } from '@/views/User/stores/user';
 import { useToast } from "vue-toastification";
@@ -70,9 +80,7 @@ const userStore = useUserStore();
 const isSkeleton = ref(null);
 var columns = ref(column);
 var rows = ref([]);
-var rowsKosong = ref([]);
 var searchTerm = ref("");
-
 
 const editUser = (row) => {
     userStore.openForm('edit', row)

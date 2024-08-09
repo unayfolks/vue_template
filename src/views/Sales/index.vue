@@ -1,5 +1,8 @@
 <template>
     <div>
-        sales main page
+        <TableSales/>
     </div>
 </template>
+<script setup>
+import TableSales from './components/TableSales.vue';
+</script>

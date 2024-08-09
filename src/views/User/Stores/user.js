@@ -41,9 +41,7 @@ export const useUserStore = defineStore('user', {
                     status: error.response ?.status,
                     message: 'Failed to fetch users: ' + error.message,
                 };
-            } finally {
-                this.loading = false
-            }
+            } 
         },
         async changePage(newPage) {
             this.current = newPage;
