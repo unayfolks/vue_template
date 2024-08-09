@@ -151,11 +151,10 @@ const watchAction = () => {
             product_category_name: data.product_category_name,
             photo: data.photo_url,
         });
-        rowsEdit.value = data.details; // Assign details to rowsEdit
-        product.value.details = rowsEdit.value; // Update product details with rowsEdit
+        rowsEdit.value = data.details; 
+        product.value.details = rowsEdit.value; 
     } else if (action.value === 'add') {
         console.log('add');
-        // Reset product details to initial rows
         product.value.details = rows.value;
     } else {
         console.log('null');

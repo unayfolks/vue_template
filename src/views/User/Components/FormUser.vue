@@ -6,11 +6,10 @@
             <Textinput v-model="user.email" label="Email*" type="email" placeholder="Email" />
             <Textinput v-if="isAddMode" v-model="user.password" label="Password*" type="password"
                 placeholder="Password" />
+            <Fileinput :preview="isPreview" name="preview" @change="onFileChange" :value="user.photo" />
             <div v-if="previewImage">
                 <img :src="previewImage" alt="Preview" width="200">
             </div>
-            <FileInput @change="onFileChange" :value="user.photo"/>
-            <!-- <Textinput @change="onFileChange" :value="user.photo" label="photo" type="file" placeholder="photo" /> -->
         </div>
         <template #footer>
             <div>
@@ -29,6 +28,8 @@ import Modal from "@/components/Modal";
 import Button from "@/components/Button";
 import Textinput from "@/components/Textinput";
 import FileInput from "@/components/Fileinput";
+import Fileinput from "@/components/Fileinput";
+
 
 const userStore = useUserStore()
 const toast = useToast();
@@ -50,9 +51,11 @@ const action = computed(() => userStore.modalAction.action) // action add or edi
 const statusMessage = computed(() => userStore.error.status) //status error
 // const errorMessage = computed(() => userStore.error.action)
 const emit = defineEmits(['response'])
+const isPreview = ref(true)
 
 watch(action, (newAction) => {
     if (newAction === 'edit') {
+        isPreview.value = false
         show.value = true;
         modal_title.value = 'Edit user';
         modal_button.value = 'Change';
@@ -134,7 +137,7 @@ const addUpdateUser = async () => {
 
         } else {
             await userStore.addUsers(formData);
-            
+
             if (statusMessage.value != 200) {
                 toast.error(" Errorr ", {
                     pauseOnHover: false,

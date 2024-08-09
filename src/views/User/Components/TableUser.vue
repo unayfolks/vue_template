@@ -31,31 +31,29 @@
                             <Tooltip placement="top" arrow theme="danger-500">
                                 <template #button>
                                     <div class="action-btn" @click="editUser(props.row)">
-                                        <Icon icon="heroicons:trash" />
-                                    </div>
-                                </template>
-                                <span>Delete</span>
-                            </Tooltip>
-                            <Tooltip placement="top" arrow theme="dark">
-                                <template #button>
-                                    <div class="action-btn" @click="deleteUser(props.row)">
                                         <Icon icon="heroicons:pencil-square" />
                                     </div>
                                 </template>
                                 <span> Edit</span>
                             </Tooltip>
+                            <Tooltip placement="top" arrow theme="dark">
+                                <template #button>
+                                    <div class="action-btn" @click="deleteUser(props.row)">
+                                        <Icon icon="heroicons:trash" />
+                                    </div>
+                                </template>
+                                <span>Delete</span>
+                            </Tooltip>
                         </div>
                     </div>
                 </span>
             </template>
-
             <template #pagination-bottom="props">
                 <div class="flex justify-center py-4 px-3">
                     <Pagination :total="userStore.totalData" :current="userStore.current" :per-page="userStore.perpage"
                         @page-changed="userStore.changePage" @click="getUsers" />
                 </div>
             </template>
-
         </vue-good-table>
     </Card>
 </template>
