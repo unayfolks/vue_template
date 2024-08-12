@@ -1,5 +1,16 @@
 <template>
     <div>
+        <div class="md:flex justify-between pb-6 md:space-y-0 space-y-3 items-center">
+            <div>
+                <InputGroup v-model="searchTerm" placeholder="Search" type="text" prependIcon="heroicons-outline:search"
+                    merged @input="onSearch" />
+            </div>
+            <div>
+                <button class="btn btn-primary btn-sm" @click="addProduct">
+                    Add Product
+                </button>
+            </div>
+        </div>
         <div class="flex align-center justify-between  gap-2 ">
             <div class="flex align-center  justify-center">
                 <h3>
@@ -7,34 +18,55 @@
                 </h3>
             </div>
             <div class="flex align-center  justify-center gap-2">
-                <InputGroup type="text" v-model="searchTerm" prependIcon="heroicons-outline:search" />
                 <Select class="w-60" :options="Available" placeholder="available" v-model="selected" />
-                <!-- <button class="btn btn-primary btn-sm" >
-                    <router-link to="product-form">Add Product</router-link>
-                </button> -->
-                <button class="btn btn-primary btn-sm" @click="addProduct">
-                    Add Product
-                </button>
+
             </div>
         </div>
-        <vue-good-table :search-options="{ enabled: false, externalQuery: searchTerm }" :columns="columns" :rows="rows"
+        <TableSkeleton v-if="isSkeleton" />
+        <vue-good-table v-if="!isSkeleton" :columns="columns" :rows="rows"
             :pagination-options="{ enabled: true, perPage: 50 }" :line-numbers="true">
-            <template v-slot:table-row="{ column, row }">
-                <span v-if="column.field == 'photo_url'" class="flex align-center justify-center">
-                    <span v-if="row.photo_url">
-                        <img :src="formatPhoto(row.photo_url)" style="width: 50px; height: 50px;" />
+            <template v-slot:table-row="props">
+                <span v-if="props.column.field == 'photo_url'" class="flex align-center justify-center">
+                    <span v-if="props.row.photo_url">
+                        <img :src="formatPhoto(props.row.photo_url)" style="width: 50px; height: 50px" />
                     </span>
-                    <span v-else>
-                        No Image
+                    <span v-else> No Image </span>
+                </span>
+                <span v-if="props.column.field == 'name'">
+                    <span v-if="props.row.name">
+                        {{ props.row.name }}
                     </span>
                 </span>
-                <span v-if="column.field === 'actions'">
-                    <Button @click="deleteProduct(row)" btnClass="btn-danger btn-sm" icon="heroicons-outline:trash" />
-                    <Button @click="editProduct(row)" btnClass="btn-primary btn-sm" icon="heroicons-outline:pencil" />
+                <span v-if="props.column.field === 'actions'">
+                    <div class="flex justify-center">
+                        <div class="flex space-x-3 rtl:space-x-reverse">
+                            <Tooltip placement="top" arrow theme="danger-500">
+                                <template #button>
+                                    <div class="action-btn" @click="editProduct(props.row)">
+                                        <Icon icon="heroicons:pencil-square" />
+                                    </div>
+                                </template>
+                                <span> Edit</span>
+                            </Tooltip>
+                            <Tooltip placement="top" arrow theme="dark">
+                                <template #button>
+                                    <div class="action-btn" @click="deleteProduct(props.row)">
+                                        <Icon icon="heroicons:trash" />
+                                    </div>
+                                </template>
+                                <span>Delete</span>
+                            </Tooltip>
+                        </div>
+                    </div>
                 </span>
             </template>
+            <template #pagination-bottom="props">
+                <div class="flex justify-center py-4 px-3">
+                    <Pagination :total="productStore.totalData" :current="productStore.current" :per-page="productStore.perpage"
+                        @page-changed="productStore.changePage" @click="getProduct" />
+                </div>
+            </template>
         </vue-good-table>
-        <TableSkeleton v-if="isSkeleton" />
     </div>
 </template>
 <script setup>
@@ -46,8 +78,10 @@ import { useToast } from "vue-toastification";
 import TableSkeleton from "@/components/Skeleton/Table";
 import Select from "@/components/Select";
 import InputGroup from "@/components/InputGroup";
-import Button from "@/components/Button";
 import Swal from 'sweetalert2'
+import Pagination from "@/components/Pagination";
+import Icon from "@/components/Icon";
+import Tooltip from "@/components/Tooltip";
 
 const router = useRouter();
 const toast = useToast();
@@ -107,6 +141,10 @@ const deleteProduct = async (row) => {
             Swal.fire("Changes are not saved", "", "info");
         }
     });
+}
+const onSearch = () => {
+    productStore.searchProducts(searchTerm.value)
+    getProduct()
 }
 const formatPhoto = (photoUrl) => {
     return photoUrl ? `${apiUrl.value}${photoUrl.substring(16)}` : '';

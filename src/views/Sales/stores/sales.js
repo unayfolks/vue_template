@@ -46,7 +46,6 @@ export const useSalesStore = defineStore('sales', {
                 });
                 this.totalData = res.data.data.meta.total
                 
-                console.log(this.sales)
             } catch (error) {
                 this.error = {
                     status: error.response ?.status,

@@ -27,7 +27,6 @@ import { useToast } from "vue-toastification";
 import Modal from "@/components/Modal";
 import Button from "@/components/Button";
 import Textinput from "@/components/Textinput";
-import FileInput from "@/components/Fileinput";
 import Fileinput from "@/components/Fileinput";
 
 

@@ -3,8 +3,7 @@ import user2Img from "@/assets/images/all-img/user2.png";
 import user3Img from "@/assets/images/all-img/user3.png";
 import user4Img from "@/assets/images/all-img/user4.png";
 
-export const menuItems = [
-  {
+export const menuItems = [{
     isHeadr: true,
     title: "menu",
   },
@@ -13,11 +12,54 @@ export const menuItems = [
     icon: "heroicons-outline:home",
     link: "home",
   },
+  {
+    title: "User",
+    icon: "heroicons-outline:user",
+    link: "user",
+  },
+  {
+    title: "Customer",
+    icon: "heroicons-outline:users",
+    link: "customer",
+  },
+  {
+    title: "Product",
+    icon: "heroicons-outline:archive-box",
+    // link: "product",
+    isOpen: true,
+    child: [{
+      childtitle: "Product",
+      childlink: "product",
+    }, {
+      childtitle: "Add product",
+      childlink: "product-form",
+    }, ]
+  },
+  {
+    title: "Category",
+    icon: "heroicons-outline:archive-box",
+    link: "category",
+  },
+  {
+    title: "Sales",
+    icon: "heroicons-outline:archive-box",
+    link: "sales",
+  },
+  {
+    title: "Transaction",
+    icon: "heroicons-outline:archive-box",
+    link: "transaction",
+  },
+  {
+    title: "Report",
+    icon: "heroicons-outline:archive-box",
+    link: "report",
+  }
+
 ];
 // menuseetins
 
-export const ProfileMenu = [
-  {
+export const ProfileMenu = [{
     label: "Profile",
     icon: "heroicons-outline:user",
     link: "#",
@@ -59,13 +101,11 @@ export const ProfileMenu = [
   },
 ];
 
-export const topMenu = [
-  {
+export const topMenu = [{
     title: "Dashboard",
     icon: "heroicons-outline:home",
     link: "/app/home",
-    child: [
-      {
+    child: [{
         childtitle: "Analytics Dashboard",
         childlink: "home",
         childicon: "heroicons:presentation-chart-line",
@@ -96,8 +136,7 @@ export const topMenu = [
     title: "App",
     icon: "heroicons-outline:chip",
     link: "/app/home",
-    child: [
-      {
+    child: [{
         childtitle: "Calendar",
         childlink: "calender",
         childicon: "heroicons-outline:calendar",
@@ -123,12 +162,10 @@ export const topMenu = [
     title: "Pages",
     icon: "heroicons-outline:view-boards",
     link: "/app/home",
-    megamenu: [
-      {
+    megamenu: [{
         megamenutitle: "Authentication",
         megamenuicon: "heroicons-outline:user",
-        singleMegamenu: [
-          {
+        singleMegamenu: [{
             m_childtitle: "Signin One",
             m_childlink: "/",
           },
@@ -182,8 +219,7 @@ export const topMenu = [
       {
         megamenutitle: "Components",
         megamenuicon: "heroicons-outline:user",
-        singleMegamenu: [
-          {
+        singleMegamenu: [{
             m_childtitle: "typography",
             m_childlink: "typography",
           },
@@ -237,8 +273,7 @@ export const topMenu = [
       {
         megamenutitle: "Forms",
         megamenuicon: "heroicons-outline:user",
-        singleMegamenu: [
-          {
+        singleMegamenu: [{
             m_childtitle: "Input",
             m_childlink: "input",
           },
@@ -291,8 +326,7 @@ export const topMenu = [
       {
         megamenutitle: "Utility",
         megamenuicon: "heroicons-outline:user",
-        singleMegamenu: [
-          {
+        singleMegamenu: [{
             m_childtitle: "Invoice",
             m_childlink: "invoice",
           },
@@ -332,8 +366,7 @@ export const topMenu = [
     title: "Widgets",
     icon: "heroicons-outline:view-grid-add",
     link: "form-elements",
-    child: [
-      {
+    child: [{
         childtitle: "Basic",
         childlink: "basic",
         childicon: "heroicons-outline:document-text",
@@ -350,8 +383,7 @@ export const topMenu = [
     title: "Extra",
     icon: "heroicons-outline:template",
 
-    child: [
-      {
+    child: [{
         childtitle: "Basic Table",
         childlink: "table-basic",
         childicon: "heroicons-outline:table",
@@ -380,8 +412,7 @@ export const topMenu = [
   },
 ];
 
-export const alertType = [
-  {
+export const alertType = [{
     type: "dark",
   },
   {
@@ -405,8 +436,7 @@ export const alertType = [
   },
 ];
 
-export const alertType2 = [
-  {
+export const alertType2 = [{
     type: "dark-light",
   },
   {
@@ -430,8 +460,7 @@ export const alertType2 = [
   },
 ];
 
-export const alertType3 = [
-  {
+export const alertType3 = [{
     type: "dark",
     icon: "fluent:target-20-regular",
   },
@@ -461,8 +490,7 @@ export const alertType3 = [
     icon: "heroicons-outline:ban",
   },
 ];
-export const alertType4 = [
-  {
+export const alertType4 = [{
     type: "dark-light",
     icon: "fluent:target-20-regular",
   },
@@ -492,8 +520,7 @@ export const alertType4 = [
     icon: "heroicons-outline:ban",
   },
 ];
-export const alertType5 = [
-  {
+export const alertType5 = [{
     type: "dark-outline",
   },
   {
@@ -516,8 +543,7 @@ export const alertType5 = [
     type: "warning-outline",
   },
 ];
-export const alertType6 = [
-  {
+export const alertType6 = [{
     type: "dark-outline",
     icon: "fluent:target-20-regular",
   },
