@@ -45,19 +45,19 @@
                                 <div class="flex-1">
                                     <div class="mb-4 text-base">
                                         <div class="flex justify-between">
-
                                             <div>
                                                 {{ product.name }}
                                             </div>
                                             <div>
-                                                <span class="inline-block"><button @click="deleteDetail(product)"><Icon icon="heroicons:trash" /></button></span>
+                                                <span class="inline-block"><button @click="deleteDetail(product)">
+                                                        <Icon icon="heroicons:trash" />
+                                                    </button></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="space-x-5">
                                         <span class="inline-block font-medium text-base">
                                             {{ product.price }}</span>
-
                                     </div>
                                     <Textinput @input="changeTotalItem(product, $event.target.value)"
                                         v-model="product.totalItem" label="total item*" type="number"
@@ -195,7 +195,7 @@ const selectProduct = (product) => {
         subtotal: totalItem * product.price
     })
 
-    /* also INSERT INTO product detail for build order post */
+    /* also INSERT INTO product detail for build ORDER post */
     product_detail.value.push({
         m_product_id: product.id,
         m_product_detail_id: '',

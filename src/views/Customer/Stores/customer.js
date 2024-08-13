@@ -83,6 +83,13 @@ export const useCustomerStore = defineStore('customer', {
         }
     },
     getters: {
+        customerOption(state) {
+            return state.customers.map(cust => ({
+                label:cust.name,
+                value:cust.id
+            }))
+        },
+
         action(actions) {
             const action = actions.openForm(this.modalAction.action)
             return action

@@ -19,7 +19,6 @@
             </div>
             <div class="flex align-center  justify-center gap-2">
                 <Select class="w-60" :options="Available" placeholder="available" v-model="selected" />
-
             </div>
         </div>
         <TableSkeleton v-if="isSkeleton" />

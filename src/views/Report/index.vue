@@ -1,8 +1,11 @@
 <template>
     <div>
-        <MainPage/>
+        <router-view />
+        <!-- <MainPage/> -->
     </div>
 </template>
 <script setup>
-import MainPage from './components/MainPage.vue';
+import MainPage from './components/ReportCategory.vue';
+import { RouterLink, RouterView } from 'vue-router'
+
 </script>
